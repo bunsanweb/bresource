@@ -1,0 +1,7 @@
+{
+  "name": "bresource",
+  "devDependencies": {
+    "local-web-server": "*",
+    "puppeteer": "*"
+  }
+}
