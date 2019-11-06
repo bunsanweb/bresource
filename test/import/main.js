@@ -1,4 +1,4 @@
-//import * as BResource from "../../bresource.js";
+import * as BResource from "./modules/bresource.js";
 
 {
   document.body.append("success");
