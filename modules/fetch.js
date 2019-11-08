@@ -4,11 +4,11 @@ export const fetchDocument = async (request, init, fetchImpl = fetch) => {
   const resp = await fetchImpl(request, init);
   const type = resp.headers.get("content-type");
   if (type.startsWith("text/html")) {
-    const content = await resp.body.text();
+    const content = await resp.text();
     const doc = createHTML(resp.url, content);
     return [doc, resp];
   } else if (type.startsWith("text/")) {
-    const content = await resp.body.text();
+    const content = await resp.text();
     const doc = createHTMLForText(resp.url, content, type);
     return [doc, resp];
   } else {

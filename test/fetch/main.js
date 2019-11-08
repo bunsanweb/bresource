@@ -26,3 +26,12 @@ import * as Fetch from "./modules/fetch.js";
   console.assert(
     doc.links[0].href === "http://example.com/test/foo.html", "resolved URL");
 }
+
+(async () => {
+  const url = document.links[0].href;
+  const [doc, resp] = await Fetch.fetchDocument(url);
+  //console.log(doc.documentElement.outerHTML);
+  console.assert(
+    doc.links[0].href === new URL("b.txt", location.href).href,
+    "resolved URL");
+})().catch(err => console.error(err.message));
