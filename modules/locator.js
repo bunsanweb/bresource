@@ -77,7 +77,7 @@ export const resolveProperties = (elems, property) => {
 
 // collection of string to typed value parser
 // -  fallbacks to default value of each types
-const typeParsers = {
+const valueParsers = {
   // builtin types: same as `typeof value`
   string: String,
   number: Number,
@@ -105,4 +105,4 @@ const typeParsers = {
 };
 
 export const resolveType =
-  (text, type) => (typeParsers[type] || typeParsers.string)(text);
+  (text, type) => (valueParsers[type] || valueParsers.string)(text);
