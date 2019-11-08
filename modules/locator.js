@@ -10,12 +10,12 @@
 
 // default locator elements:
 // - root "": the link element 
-// - selector "": the link element
+// - selector "": the root element
 // - property "": textContent
 // - type "": string 
 
 // locator text: serialized locator
-// - format: [root] `{` [selector] `}` [property] [`#` [type]]
+// - format: [[root] `{` [selector] `}`] [property] [`#` [type]]
 // - default text: `"{}"`
 
 export const serialize = ({
@@ -27,10 +27,10 @@ export const parse = (locatorText = "") => {
   const i1 = locatorText.indexOf("{");
   const i2 = locatorText.indexOf("}");
   // TBD: case for  i1 < 0 or i2 < 0 or i1 > i2
-  console.assert(i1 >= 0 && i2 >= 0 && i1 < i2, "unimplemented");
-  const root = locatorText.slice(0, i1);
-  const selector = locatorText.slice(i1 + 1, i2);
-  const propType = locatorText.slice(i2 + 1);
+  const selectorExisted = i1 >= 0 && i2 >= 0 && i1 < i2;
+  const root = selectorExisted ? locatorText.slice(0, i1) : "";
+  const selector = selectorExisted ? locatorText.slice(i1 + 1, i2) : "";
+  const propType = selectorExisted ? locatorText.slice(i2 + 1) : locatorText;
   const i3 = propType.lastIndexOf("#");
   const property = i3 < 0 ? propType : propType.slice(0, i3);
   const type = i3 < 0 ? "" : propType.slice(i3 + 1);
@@ -44,9 +44,9 @@ export const resolve =
 export const resolveLocator = (link, {
   root = "", selector = "", property = "", type = "",
 }) => {
-  const root = resolveRoot(link. root);
-  const elems = selector ? [link] : [...root.querySelectorAll(selector)];
-  const props = elems.map(elem => elem[property || "textContent"] || "");
+  const rootElem = resolveRoot(link, root);
+  const elems = resolveElements(rootElem, selector);
+  const props = resolveProperties(elems, property);
   return props.map(text => resolveType(text, type));
 };
 
@@ -56,10 +56,29 @@ export const resolveRoot = (elem, root) => {
   return resolveRoot(elem.parentElement, root);
 };
 
+export const resolveElements = (root, selector) => {
+  try {
+    return selector ? [...root.querySelectorAll(selector)] : [root];
+  } catch (err) {
+    return [root];
+  }
+};
+
+export const resolveProperties = (elems, property) => {
+  return elems.map(elem => {
+    if (!property) return elem.textContent;
+    if (Reflect.has(elem.attributes, property)) {
+      return elem.attributes[property].value;
+    }
+    if (Reflect.has(elem, property)) return String(elem[property]);
+    return "";
+  });
+};
+
 // collection of string to typed value parser
 // -  fallbacks to default value of each types
 const typeParsers = {
-  // builtin types
+  // builtin types: same as `typeof value`
   string: String,
   number: Number,
   boolean: Boolean,
