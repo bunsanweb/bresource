@@ -4,8 +4,11 @@ import * as Link from "./modules/link.js";
   // a.html =follow-list=> a-list.html =webid,foaf=> a.html,b.html,c.html
   const a = new Link.Link(document.links[0], "href");
 
-  const aFollowList = await a.find([{
-    "rel#list": vs => vs.some(v => v.includes("follow-list"))}]);
+  const aFollowList = await a.find([
+    {"rel#list": vs => vs.some(v => v.includes("follow-list"))}]);
+  //TBD: short hand
+  //const aFollowList = await a.find([{"rel#list": Link.some("follow-list")}]);
+  
   console.assert(
     aFollowList[0].uri == new URL("a-list.html", location.href).href,
     "a-list url");
@@ -14,6 +17,16 @@ import * as Link from "./modules/link.js";
     l => l.find([{
       "rel#list": vs => vs.some(v => v.includes("foaf") || v.includes("webid"))
     }])))).flat();
+  // TBD: short hand
+  //const aFollows = await Link.flatFind(
+  //  aFollowList, [{"rel#list": Link.some("foaf", "webid")}]);
+  
+  // TBD: chained
+  //const collector = Link.collector(
+  //  [{"rel#list": Link.some("follow-list"))}],
+  //  [{"rel#list": Link.some("foaf", "webid")}]);
+  //const aFollows = await collector(a);
+  
   console.assert(aFollows.length == 3, "a follow count");
   //console.log(aFollows.flatMap(l => l.attribute("rel#list")).join(","));
   console.assert(
