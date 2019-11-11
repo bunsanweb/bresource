@@ -1,3 +1,3 @@
-import {linkForWindow} from "./window.js";
+import {linkFromWindow} from "./window.js";
 
-export const link = linkForWindow;
+export const link = linkFromWindow;
