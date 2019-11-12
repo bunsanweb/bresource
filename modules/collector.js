@@ -2,8 +2,16 @@
 export const collector = conditions => async links =>
   (await Promise.all((await links).map(link => link.find(conditions)))).flat();
 
-export const flow = (...conditionsFlow) => links => conditionsFlow.reduce(
-  (links, conditions) => collector(conditions)(links), links);
+export const flow = (...conditionsFlow) =>
+  step(...conditionsFlow.map(collector));
+
+// TBD: collector combinators
+export const step = (...collectors) =>
+  links => collectors.reduce((links, aCollector) => aCollector(links), links);
+
+export const uniq = aCollector =>
+  async links => [...new Set(await aCollector(links))];
+
 
 // conditions judgments
 export const every = prop => vs => vs.every(prop);
