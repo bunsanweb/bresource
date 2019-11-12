@@ -26,12 +26,17 @@ export const createHTMLDocument = (content) => {
 export const createHTML = (url, content) => {
   const doc = createHTMLDocument(content);
   const base = doc.createElement("base");
-  base.setAttribute("ignore", "ignore"); // TBD: mark
   base.href = url;
+  setExtra(base);
   doc.head.prepend(base);
   Object.defineProperty(doc, "URL", {value: url, writable: false,});
   return doc;
 };
+
+// mark fetch added extra element for DOM functionalities
+// TBD: how to mark elements
+export const setExtra = elem => elem.setAttribute("ignore", "ignore");
+export const isExtra = elem => elem.getAttribute("ignore") === "ignore";
 
 export const createHTMLForText = (url, content, type) => {
   const doc = createHTML(url, "");

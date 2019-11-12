@@ -1,5 +1,5 @@
 import {resolve} from "./locator.js";
-import {fetchDocument} from "./fetch.js";
+import {fetchDocument, isExtra} from "./fetch.js";
 
 export const Link = class {
   constructor(element, uriKey, options = {}) {
@@ -16,9 +16,7 @@ export const Link = class {
   match(condition) {
     // `condition` as {locatorText: judgement, ...}
     //  - judgement: a function for  value list => boolean
-    if (typeof condition === "string") {
-      condition = {[condition]: _ => true};
-    }
+    if (typeof condition === "string") condition = {[condition]: Boolean};
     try {
       return Object.keys(condition).every(locatorText => {
         return condition[locatorText](this.attribute(locatorText));
@@ -72,10 +70,9 @@ export const Entity = class {
   }
   get links() {
     const selector = "[href],[src]";
-    return [...this.doc.querySelectorAll(selector)].filter(elem => {
-      //NOTE: ignore base element appended in fetchDocument
-      return elem.getAttribute("ignore") !== "ignore";
-    }).map(elem => {
+    const elems = [...this.doc.querySelectorAll(selector)].filter(
+      elem => !isExtra(elem));
+    return elems.map(elem => {
       if (!this.cache.has(elem)) {
         const uriKey = Reflect.has(elem, "href") ? "href" : "src";
         this.cache.set(elem, new Link(elem, uriKey, this.options));
