@@ -23,6 +23,7 @@ export const wrap = links => {
   return split(links);
 };
 
+// collectors
 export const collector = conditions => async function* (links) {
   for await (const link of wrap(links)) yield* wrap(link.find(conditions));
 };
@@ -30,7 +31,7 @@ export const collector = conditions => async function* (links) {
 export const flow = (...conditionsFlow) =>
   step(...conditionsFlow.map(collector));
 
-// TBD: collector combinators
+// collector combinators
 export const step = (aCollector, ...collectors) => async function* (links) {
   if (!aCollector) return yield* links;
   return yield* step(...collectors)(aCollector(links));
