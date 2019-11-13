@@ -5,6 +5,7 @@ export const split = async function* (pa) {
   return yield* (await pa);
 };
 export const slice = (begin, end) => async function* (ai) {
+  for (let i = 0; i < begin; i++) await ai.next();
   for (let i = begin; i < end; i++) {
     const {value, done} = await ai.next();
     if (done) return value;
