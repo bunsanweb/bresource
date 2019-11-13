@@ -1,16 +1,47 @@
-// link collectors: Promise<[Link]> => Promise<[Link]>
-export const collector = conditions => async links =>
-  (await Promise.all((await links).map(link => link.find(conditions)))).flat();
+// link collectors: AsyncItor<Link> => AsyncItor<Link>
+
+// async iterator utils
+export const split = async function* (pa) {
+  return yield* (await pa);
+};
+export const slice = (begin, end) => async function* (ai) {
+  for (let i = begin; i < end; i++) {
+    const {value, done} = await ai.next();
+    if (done) return value;
+    yield value;
+  }
+  throw Error("unreachable");
+};
+export const collect = async ai => {
+  const r = [];
+  for await (const v of ai) r.push(v);
+  return r;
+};
+export const wrap = links => {
+  if (typeof links[Symbol.asyncIterator] === "function") return links;
+  return split(links);
+};
+
+export const collector = conditions => async function* (links) {
+  for await (const link of wrap(links)) yield* wrap(link.find(conditions));
+};
 
 export const flow = (...conditionsFlow) =>
   step(...conditionsFlow.map(collector));
 
 // TBD: collector combinators
-export const step = (...collectors) =>
-  links => collectors.reduce((links, aCollector) => aCollector(links), links);
-
-export const uniq = aCollector =>
-  async links => [...new Set(await aCollector(links))];
+export const step = (aCollector, ...collectors) => async function* (links) {
+  if (!aCollector) return yield* links;
+  return yield* step(...collectors)(aCollector(links));
+};
+export const uniq = aCollector => async function* (links) {
+  const cache = new Set();
+  for await (const link of aCollector(links)) {
+    if (cache.has(link)) continue;
+    cache.add(link);
+    yield link;
+  }
+};
 
 
 // conditions judgments

@@ -44,7 +44,7 @@ import * as Collector from "./modules/collector.js";
   
   // a.html =follow-list=> a-list.html =webid,foaf=> a.html,b.html,c.html
   const a = new Link.Link(document.links[0], "href");
-  const aFollows = await webidCollector([a]);
+  const aFollows = await Collector.collect(webidCollector([a]));
   console.assert(aFollows.length == 3, "a follow count by collector");
   //console.log(aFollows.flatMap(l => l.attribute("rel#list")).join(","));
   console.assert(
@@ -53,7 +53,7 @@ import * as Collector from "./modules/collector.js";
   
   // a.html => a-list.html => a.html,b.html,c.html  
   const b = new Link.Link(document.links[1], "href");
-  const bFollows = await foafCollector([b]);
+  const bFollows = await Collector.collect(foafCollector([b]));
   console.assert(bFollows.length == 3, "b follow count by collector");
   //console.log(bFollows.flatMap(l => l.attribute("rel#list")).join(","));
   console.assert(
