@@ -1,6 +1,9 @@
 import {resolve} from "./locator.js";
 import {fetchDocument, isExtra} from "./fetch.js";
 
+export const isNotEmpty = vs => vs.some(
+  v => Array.isArray(v) && v.length > 0 || Boolean(v));
+
 export const Link = class {
   constructor(element, uriKey, options = {}) {
     this.element = element;
@@ -16,7 +19,7 @@ export const Link = class {
   match(condition) {
     // `condition` as {locatorText: judgement, ...}
     //  - judgement: a function for  value list => boolean
-    if (typeof condition === "string") condition = {[condition]: Boolean};
+    if (typeof condition === "string") condition = {[condition]: isNotEmpty};
     try {
       return Object.keys(condition).every(locatorText => {
         return condition[locatorText](this.attribute(locatorText));

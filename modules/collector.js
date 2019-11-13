@@ -43,6 +43,24 @@ export const uniq = aCollector => async function* (links) {
     yield link;
   }
 };
+export const uniqUri = aCollector => async function* (links) {
+  const cache = new Set();
+  for await (const link of aCollector(links)) {
+    if (cache.has(link.uri)) continue;
+    cache.add(link.uri);
+    yield link;
+  }
+};
+
+export const first = aCollector => async function* (links) {
+  for await (const link of aCollector(links)) return yield link;
+};
+export const paged = (itemCollector, nextCollector) => async function* (links) {
+  const resolved = await collect(links);
+  if (resolved.length === 0) return;
+  yield* itemCollector(resolved);
+  yield* paged(itemCollector, nextCollector)(nextCollector(resolved));
+};
 
 
 // conditions judgments

@@ -1,7 +1,9 @@
 // fetch URL as HTMLDocument
 
 export const fetchDocument = async (request, init, fetchImpl = fetch) => {
-  const resp = await fetchImpl(request, init);
+  const resp = await fetchImpl(request, init).catch(
+    err => new Response(err.message, {status: 502, headers: {
+      "content-type": "text/plain;charset=utf-8"}}));
   const type = resp.headers.get("content-type");
   if (type.startsWith("text/html")) {
     const content = await resp.text();
@@ -13,7 +15,7 @@ export const fetchDocument = async (request, init, fetchImpl = fetch) => {
     return [doc, resp];
   } else {
     const doc = createHTMLForOthers(resp);
-    return [doc, resp];
+      return [doc, resp];
   }
 };
 

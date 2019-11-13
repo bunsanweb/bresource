@@ -45,14 +45,15 @@ export const resolveLocator = (link, {
   root = "", selector = "", property = "", type = "",
 }) => {
   const rootElem = resolveRoot(link, root);
+  if (!rootElem) return [];
   const elems = resolveElements(rootElem, selector);
   const props = resolveProperties(elems, property);
   return props.map(text => resolveType(text, type));
 };
 
 export const resolveRoot = (elem, root) => {
+  if (!elem) return null;
   if (root === ""|| elem.matches(root)) return elem;
-  if (!elem.parentElement) return elem; // TBD: case of documentElement
   return resolveRoot(elem.parentElement, root);
 };
 
