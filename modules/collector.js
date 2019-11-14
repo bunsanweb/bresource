@@ -72,6 +72,13 @@ export const iterate = (aCollector, cache = new Set()) =>
     yield* iterate(aCollector, cache)(aCollector(resolved));
   };
 
+export const orElse = (aCollector, ...collectors) => async function* (links) {
+  const resolved = await collect(links);
+  const resolvedCollect = await collect(aCollector(resolved));
+  if (resolvedCollect.length > 0) yield* resolvedCollect;
+  else if (collectors.length > 0) yield* orElse(...collectors)(resolved);
+};
+
 
 // conditions judgments
 export const every = prop => vs => vs.every(prop);
