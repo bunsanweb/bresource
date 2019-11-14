@@ -8,7 +8,7 @@ import * as Collector from "./modules/collector.js";
   const nextCollector = Collector.first(Collector.collector(
     [{"rel#list": Collector.some(Collector.oneOf("next"))}]));
   const pagedCollector = Collector.paged(itemCollector, nextCollector);
-  
+
   const p1 = [new Link.Link(document.links[0], "href")];
   /*
   const p2 = await Collector.collect(nextCollector(p1));
@@ -25,7 +25,16 @@ import * as Collector from "./modules/collector.js";
   }
   */
   
+  
   console.error("[INFO] next 404 error is spawned in fetch(); not assertion");
   const items = await Collector.collect(pagedCollector(p1));
   console.assert(items.length == 9, `item in pages: ${items.length}`);
+
+  // paged items with iterate combinator
+  {
+    const pagesCollector = Collector.iterate(nextCollector);
+    const pagedCollector = Collector.step(pagesCollector, itemCollector);
+    const items = await Collector.collect(pagedCollector(p1));
+    console.assert(items.length == 9, `item in pages: ${items.length}`);
+  }
 })().catch(err => console.error(err.message));
