@@ -7,7 +7,7 @@ const entityFromWindow = (options) => {
   return new Link.Entity(document, resp, options);
 };
 
-export const linkFromWindow = (options) => {
+export const windowLink = (options) => {
   const entity = entityFromWindow(options);
   const elem = document.createElement("a");
   elem.href = entity.uri;

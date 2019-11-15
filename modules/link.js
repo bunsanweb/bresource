@@ -5,7 +5,7 @@ export const isNotEmpty = vs => vs.some(
   v => Array.isArray(v) && v.length > 0 || Boolean(v));
 
 export const Link = class {
-  constructor(element, uriKey, options = {}) {
+  constructor(element, uriKey, options) {
     this.element = element;
     this.uriKey = uriKey;
     this.options = options;
@@ -39,7 +39,8 @@ export const Link = class {
   // methods for link destination
   async entity(options = this.options) {
     if (!this.cache) {
-      const [doc, resp] = await fetchDocument(this.uri, options);
+      const [doc, resp] = await fetchDocument(
+        this.uri, requestInit(this), options);
       this.cache = new Entity(doc, resp, options);
     }
     return this.cache;
@@ -50,6 +51,20 @@ export const Link = class {
   async find(conditions) {
     return (await this.entity()).find(conditions);
   }
+};
+
+export const requestInit = link => {
+  const headers = {};
+  if (link.element.tagName === "A") {
+    headers["Accept"] =
+      "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.5";
+  } else if (link.element.tagName === "IMG") {
+    headers["Accept"] = "image/webp,image/*,*/*;q=0.8";
+  } else if (link.element.tagName === "LINK" &&
+             link.element.rel.toLowerCase() === "stylesheet") {
+    headers["Accept"] = "text/css,*/*;q=0.1";
+  }
+  return {headers};
 };
 
 export const Entity = class {

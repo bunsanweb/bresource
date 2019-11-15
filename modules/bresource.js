@@ -1,3 +1,3 @@
-import {linkFromWindow} from "./window.js";
+export {windowLink} from "./window.js";
+export * from "./collector.js";
 
-export const link = linkFromWindow;
