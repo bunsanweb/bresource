@@ -1,5 +1,21 @@
 import * as BResource from "./modules/bresource.js";
 
+const customFetch = (req, init) => {
+  const passUrl = new URL("p4.html", location.href).href;
+  // client side block to access "p4.html" as status 404
+  if (typeof req === "string" && new URL(req, location.href).href === passUrl ||
+      req instanceof Request &&
+      new URL(req.url, location.href).href === passUrl) {
+    const res = new Response("Not Found", {
+      status: 404,
+      headers: {"Content-Type": "text/plain;charset=utf-8"}
+    });
+    Object.defineProperty(res, "url", {value: passUrl, writable: false});
+    return Promise.resolve(res);
+  }
+  return fetch(req, init);
+};
+
 (async () => {
   // paged items
   const itemCollector = BResource.collector(["li{a[href]}href"]);
@@ -7,7 +23,9 @@ import * as BResource from "./modules/bresource.js";
     [{"rel#list": BResource.some(BResource.oneOf("next"))}]));
   const pagedCollector = BResource.paged(itemCollector, nextCollector);
 
-  const p1 = await BResource.windowLink().find([`a[rel~="page"][href]{}`]);
+  const options = {fetch: customFetch};
+  const p1 = await BResource.windowLink(options).find(
+    [`a[rel~="page"][href]{}`]);
   
   /*
   const p2 = await BResource.collect(nextCollector(p1));
@@ -24,7 +42,6 @@ import * as BResource from "./modules/bresource.js";
   }
   //*/
   
-  console.error("[INFO] next 404 error is spawned in fetch(); not assertion");
   const items = await BResource.collect(pagedCollector(p1));
   console.assert(items.length == 9, `item in pages: ${items.length}`);
 
