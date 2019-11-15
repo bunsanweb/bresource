@@ -1,14 +1,14 @@
 # BResource
 
-BResource API is of information access interface for hyperlinked URIs 
+BResource is programming interface of information access for hyperlinked URIs 
 on modern browser enviromment.
 Information about a URI is not only in a content of the URI, 
 but also in a HTML document of the hyperlink source.
 BResource model focuses hyperlink HTML elements
 surrounded information (a.k.a. metadata) about their linked URI.
 
-On BResource model, clinets pick up links with metadata from HTML, 
-then access the URL for get new link container as HTML document 
+On BResource model, clients pick up links with metadata from HTML, 
+then access the URL for getting new link container as HTML document 
 to pick up next links, until the links with target metadata are found.
 
 ## Example
@@ -63,7 +63,7 @@ import * as BResource from "./modules/bresource.js";
   
   // 2. make this `window.document` as a root link
   //    - link is a primary object on BResource model
-  //    - link ia a handle to access metadata in link source document 
+  //    - link is a handle to access metadata in link source document 
   //      and target content
   const rootLink = BResource.windowLink();
   
