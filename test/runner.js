@@ -21,9 +21,17 @@ export const run = async (urlPorts, opts = {}) => {
     });
     const pagePromise = page.goto(initUrl, opts.goto);
     if (opts.timeout > 0) {
-      setTimeout(guard.error, opts.timeout, `timeout: ${opts.timeout}ms`);
+      const id = setTimeout(
+        guard.error, opts.timeout, `timeout: ${opts.timeout}ms`);
+      try {
+        await guard.promise;
+      } finally {
+        clearTimeout(id);
+      }
+    } else {
+      guard.finish();
     }
-    await Promise.race([pagePromise, guard.promise]);
+    await pagePromise;
     await page.close();
   } finally {
     await browser.close();
