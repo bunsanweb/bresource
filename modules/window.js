@@ -1,17 +1,19 @@
 import * as Link from "./link.js";
 
-const entityFromWindow = (options) => {
-  const resp = new Response(document.documentElement.outerHTML, {
+const entityFromDocument = (doc, options) => {
+  const resp = new Response(doc.documentElement.outerHTML, {
     status: 200, headers: {"content-type": "text/html;charset=utf-8"}});
-  Object.defineProperty(resp, "url", {value: document.URL, writable: false});
-  return new Link.Entity(document, resp, options);
+  Object.defineProperty(resp, "url", {value: doc.URL, writable: false});
+  return new Link.Entity(doc, resp, options);
 };
 
-export const windowLink = (options) => {
-  const entity = entityFromWindow(options);
-  const elem = document.createElement("a");
+export const documentLink = (doc, options) => {
+  const entity = entityFromDocument(doc, options);
+  const elem = doc.createElement("a");
   elem.href = entity.uri;
   const link = new Link.Link(elem, "href", options);
   link.cache = entity;
   return link;
 };
+
+export const windowLink = options => documentLink(document, options);
