@@ -11,6 +11,19 @@ On BResource model, clients pick up links with metadata from HTML,
 then access the URL for getting new link container as HTML document 
 to pick up next links, until the links with target metadata are found.
 
+## Requirement
+
+BResource is programmed with 
+[ECMAScript 2019](https://www.ecma-international.org/ecma-262/10.0/index.html)
+; `async`, `await`, `for-await-of` loop,  and **ES module**.
+BResource also uses 
+[standard Web APIs](https://developer.mozilla.org/en-US/docs/Web/API) 
+; HTML DOM implementation, amd `fetch` with `Response`.
+
+To use BResource library on the current Chrome or the current Firefox, 
+just `import` .js modules.
+Any transpile/bundling processes are not required.
+
 ## Example
 
 Supporse the paged link list URLs such as:
@@ -101,3 +114,28 @@ http://localhost:8000/item22.html item-22
 http://localhost:8000/item23.html item-23
 ```
 
+
+## Requirement for running module tests
+
+We prepared implementation test codes in `./test/*` directories.
+
+These tests contains `index.html` and `main.js` as test code for each module 
+implementations with simple `console.assert()` checkers.
+
+Commandline runner of each test is `run.js`.
+The runner requires `node.js >=13.2` (as ES module enabled node.js) with 
+`local-web-server` and `puppeteer` as libraries.
+
+```
+$ cd bresource/
+$ npm i
+...
+$ node test/locator/run.js
+(node:18587) ExperimentalWarning: The ESM module loader is experimental.
+$
+```
+
+(No output when every asserts passed)
+
+These test `index.html` can also run on Web page of Firefox directly,
+or of Chrome via local web server (e.g. `python3 -m http.server`).
