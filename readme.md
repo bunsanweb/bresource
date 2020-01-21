@@ -137,5 +137,7 @@ $
 
 (No output when every asserts passed)
 
+<!--
 These test `index.html` can also run on Web page of Firefox directly,
 or of Chrome via local web server (e.g. `python3 -m http.server`).
+-->

@@ -1,4 +1,4 @@
-import * as Locator from "./modules/locator.js";
+import * as Locator from "http://localhost:10000/locator.js";
 
 {
   const link = document.links[0];

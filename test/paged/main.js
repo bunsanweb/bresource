@@ -1,4 +1,4 @@
-import * as BResource from "./modules/bresource.js";
+import * as BResource from "http://localhost:10000/bresource.js";
 
 const customFetch = (req, init) => {
   const passUrl = new URL("p4.html", location.href).href;

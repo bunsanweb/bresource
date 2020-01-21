@@ -1,4 +1,4 @@
-import * as Fetch from "./modules/fetch.js";
+import * as Fetch from "http://localhost:10000/fetch.js";
 
 {
   const doc = Fetch.createHTML("http://example.com/test/", `

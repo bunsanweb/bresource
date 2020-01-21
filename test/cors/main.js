@@ -1,5 +1,5 @@
-import * as Link from "./modules/link.js";
-import * as Collector from "./modules/collector.js";
+import * as Link from "http://localhost:10000/link.js";
+import * as Collector from "http://localhost:10000/collector.js";
 
 // collect links over cross domain hosts
 (async () => {
