@@ -31,14 +31,14 @@ const customFetch = (req, init) => {
   const p2 = await BResource.collect(nextCollector(p1));
   const p3 = await BResource.collect(nextCollector(p2));
   const p4 = await BResource.collect(nextCollector(p3));
-  console.log(p1[0].uri, p2[0].uri, p3[0].uri, p4[0].uri);
+  console.debug(p1[0].uri, p2[0].uri, p3[0].uri, p4[0].uri);
   const p1items = await BResource.collect(itemCollector(p1));
   const p2items = await BResource.collect(itemCollector(p2));
   const p3items = await BResource.collect(itemCollector(p3));
   const p4items = await BResource.collect(itemCollector(p4));
-  console.log(p1items.length, p2items.length, p3items.length, p4items.length);
+  console.debug(p1items.length, p2items.length, p3items.length, p4items.length);
   for await (const item of pagedCollector(p1)) {
-    console.log(item.uri);
+    console.debug(item.uri);
   }
   //*/
   

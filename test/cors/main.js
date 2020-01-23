@@ -19,7 +19,7 @@ import * as Collector from "http://localhost:10000/collector.js";
   ])))).flat();
   
   console.assert(aFollows.length === 3, "a follow count");
-  //console.log(aFollows.flatMap(l => l.attribute("rel#list")).join(","));
+  //console.debug(aFollows.flatMap(l => l.attribute("rel#list")));
   console.assert(
     aFollows.flatMap(l => l.attribute("rel#list").every(
       v => ["foaf", "webid"].includes(v))), "rels of a follow");
@@ -29,7 +29,7 @@ import * as Collector from "http://localhost:10000/collector.js";
   const bFollows = await b.find([{
     "rel#list": vs => vs.some(v => v.includes("follow"))}]);
   console.assert(bFollows.length === 3, "b follow count");
-  //console.log(bFollows.flatMap(l => l.attribute("rel#list")).join(","));
+  //console.debug(bFollows.flatMap(l => l.attribute("rel#list")));
   console.assert(
     bFollows.flatMap(l => l.attribute("rel#list").every(
       v => ["follow", "foaf", "webid"].includes(v))), "rels of a follow");
@@ -48,7 +48,7 @@ import * as Collector from "http://localhost:10000/collector.js";
   const a = new Link.Link(document.links[0], "href");
   const aFollows = await Collector.collect(followsCollector([a]));
   console.assert(aFollows.length === 3, "a follow count by collector");
-  //console.log(aFollows.flatMap(l => l.attribute("rel#list")).join(","));
+  //console.debug(aFollows.flatMap(l => l.attribute("rel#list")));
   console.assert(
     aFollows.flatMap(l => l.attribute("rel#list").every(
       v => ["foaf", "webid"].includes(v))), "rels of a follow by collector");
@@ -57,7 +57,7 @@ import * as Collector from "http://localhost:10000/collector.js";
   const b = new Link.Link(document.links[1], "href");
   const bFollows = await Collector.collect(followsCollector([b]));
   console.assert(bFollows.length === 3, "b follow count by collector");
-  //console.log(bFollows.flatMap(l => l.attribute("rel#list")).join(","));
+  //console.debug(bFollows.flatMap(l => l.attribute("rel#list")));
   console.assert(
     bFollows.flatMap(l => l.attribute("rel#list").every(
       v => ["follow", "foaf", "webid"].includes(v))),

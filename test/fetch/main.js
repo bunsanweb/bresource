@@ -13,7 +13,7 @@ import * as Fetch from "http://localhost:10000/fetch.js";
 </body>
 </html>
 `);
-  //console.log(doc.documentElement.outerHTML);
+  //console.debug(doc.documentElement.outerHTML);
   console.assert(
     doc.head.querySelector("meta").outerHTML === `<meta charset="utf-8">`,
     "head");
@@ -31,7 +31,7 @@ import * as Fetch from "http://localhost:10000/fetch.js";
   // HTML content-type
   const url0 = document.links[0].href;
   const [doc0, resp0] = await Fetch.fetchDocument(url0);
-  //console.log(doc.documentElement.outerHTML);
+  //console.debug(doc.documentElement.outerHTML);
   console.assert(doc0.URL === url0, "html url");
   console.assert(
     doc0.links[0].href === new URL("b.txt", location.href).href,
@@ -40,7 +40,7 @@ import * as Fetch from "http://localhost:10000/fetch.js";
   // other text content-type
   const url1 = doc0.links[0].href;
   const [doc1, resp1] = await Fetch.fetchDocument(url1);
-  //console.log(doc1.documentElement.outerHTML);
+  //console.debug(doc1.documentElement.outerHTML);
   console.assert(doc1.URL === url1, "text url");
   console.assert(doc1.links.length === 0, "text url links");
   console.assert(doc1.body.textContent === "Hello Text\n", "text url content");
@@ -48,7 +48,7 @@ import * as Fetch from "http://localhost:10000/fetch.js";
   // binary content-type
   const url2 = doc0.links[1].href;
   const [doc2, resp2] = await Fetch.fetchDocument(url2);
-  //console.log(doc2.documentElement.outerHTML);
+  //console.debug(doc2.documentElement.outerHTML);
   console.assert(doc2.URL === url2, "binary url");
   console.assert(
     doc2.querySelector(`meta[http-equiv="content-type"i]`).content.startsWith(
@@ -57,7 +57,7 @@ import * as Fetch from "http://localhost:10000/fetch.js";
   // not found url
   const url3 = doc0.links[1].href;
   const [doc3, resp3] = await Fetch.fetchDocument(url3);
-  //console.log(doc3.documentElement.outerHTML);
+  //console.debug(doc3.documentElement.outerHTML);
   console.assert(doc3.URL === url3, "not found url");
 })().catch(err => console.error(err.message));
 
