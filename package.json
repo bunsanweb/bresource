@@ -6,5 +6,16 @@
   },
   "devDependencies": {
     "test-on-puppeteer": "bunsanweb/test-on-puppeteer#master"
+  },
+  "scripts": {
+    "t:import": "node test/import/run.js",
+    "t:locator": "node test/locator/run.js",
+    "t:link": "node test/link/run.js",
+    "t:fetch": "node test/fetch/run.js",
+    "t:cors": "node test/cors/run.js",
+    "t:paged": "node test/paged/run.js",
+    "test:basic": "npm run t:import && npm run t:locator && npm run t:link",
+    "test:advanced": "npm run t:fetch && npm run t:cors && npm run t:paged",
+    "test": "npm run test:basic && npm run test:advanced"
   }
 }
