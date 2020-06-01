@@ -14,7 +14,7 @@ export const fetchDocument = async (request, init, options) => {
   const resp = await fetchImpl(options)(request, init).catch(
     err => new Response(err.message, {status: 502, headers: {
       "content-type": "text/plain;charset=utf-8"}}));
-  const type = resp.headers.get("content-type");
+  const type = resp.headers.get("content-type") || "";
   if (type.startsWith("text/html")) {
     const content = await resp.text();
     const doc = createHTML(resp.url, content, options);
